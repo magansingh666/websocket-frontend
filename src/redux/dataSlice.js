@@ -14,12 +14,12 @@ export const dataSlice = createSlice({
     deleteToken : (state) => {
       state.token = null;
     },
-    addNewsItem : (state, action) => {
-      state.news = state.news.push(action.payload)
+    addNews : (state, action) => {
+      state.news = action.payload
     },   
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addToken, deleteToken } = dataSlice.actions
+export const { addToken, deleteToken, addNews } = dataSlice.actions
 export default dataSlice.reducer
