@@ -8,20 +8,25 @@ import { useSelector, useDispatch } from 'react-redux'
 import {addNews } from '../redux/dataSlice'
 
 
-export default function NewsForm({socket}) {
+export default function NewsForm({socket, setAddVisible, setEditItemId = undefined, id = undefined ,titleText = "", subTitleText = "", desText = ""}) {
 
 // States for registration
-const [title, setTitle] = useState('title00001');
-const [subtitle, setSubtitle] = useState('subtitle0001');
-const [description, setDescription] = useState('description000001');
+const [title, setTitle] = useState(titleText);
+const [subtitle, setSubtitle] = useState(subTitleText);
+const [description, setDescription] = useState(desText);
 const dispatch = useDispatch();
+const news = useSelector((state) =>  state.data.news)
 
-// States for checking the errors
-const [error, setError] = useState(false);
-
-
-
-
+useEffect(() => {
+  if(id != undefined ){
+   const item =  news.filter( e => e.id === id).pop()
+   console.log("tem array is ")
+   console.log(item)
+   setTitle(item.title)
+   setSubtitle(item.subtitle)
+   setDescription(item.description)
+  }
+}, [])
 
 
 // Handling the name change
@@ -43,13 +48,28 @@ const handleDescription = (e) => {
 // Handling the form submission
 const handleSubmit = async (e) => {
   e.preventDefault();	
+  if(setEditItemId != undefined ){
+    setEditItemId(0);
+  }
   console.log("handle Submit clicked ")
   console.log(title, subtitle, description)
-  socket.emit("newnewsitem", {title, subtitle, description},  (response) => {
-  console.log(response)
-  dispatch(addNews(response))
+  if(id == undefined ) {
+    socket.emit("newnewsitem", {title, subtitle, description},  (response) => {
+      console.log(response)
+      dispatch(addNews(response))
+      setAddVisible(false)
+      })
 
-  } )
+  }
+  else {
+    socket.emit("newsitemupdate", {id, title, subtitle, description},  (response) => {
+      console.log(response)
+      dispatch(addNews(response))
+      setAddVisible(false)
+      })
+    
+  }
+ 
 };
 return (
     <Box sx={{maxWidth: "400px", backgroundColor: "white", margin: "50px auto"}}>

@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { margin } from '@mui/system';
 import { useSelector, useDispatch } from 'react-redux'
-import {addToken, deleteToken } from '../redux/dataSlice'
+import {addToken, deleteToken, setUser } from '../redux/dataSlice'
 
 
 export default function Login({socket, setLoginVisible, setSignupVisible}) {
@@ -15,6 +15,7 @@ const [email, setEmail] = useState('dummyuser001@gmail.com');
 const [password, setPassword] = useState('1A@strongpassword001');
 
 const token = useSelector((state) =>  state.data.token)
+const user = useSelector(state => state.data.user)
 const dispatch = useDispatch() 
 
 // States for checking the errors
@@ -26,6 +27,8 @@ useEffect(()=> {
     console.log(data)
     if(data.message === "success"){
       dispatch(addToken(data.token))
+      const {id, name, email} = data
+      dispatch(setUser({id, name, email}))
       alert("login successful!")
       setLoginVisible(false)
     
@@ -64,6 +67,7 @@ return (
       <div style={{textAlign : "center"}}>
       <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>LOG IN</Button>
       <h1>{token}</h1>
+      <p>{JSON.stringify(user)}</p>
       </div>      
       </Stack>      
     </Box>	

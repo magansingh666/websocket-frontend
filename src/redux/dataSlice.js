@@ -6,6 +6,7 @@ export const dataSlice = createSlice({
     token: null,
     userId: null,
     news : [],
+    user : {},
   },
   reducers: {
     addToken: (state, action) => {      
@@ -16,10 +17,13 @@ export const dataSlice = createSlice({
     },
     addNews : (state, action) => {
       state.news = action.payload
-    },   
+    },
+    setUser : (state, action) => {
+      state.user = action.payload
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addToken, deleteToken, addNews } = dataSlice.actions
+export const { addToken, deleteToken, addNews, setUser } = dataSlice.actions
 export default dataSlice.reducer
