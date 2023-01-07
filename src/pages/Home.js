@@ -10,8 +10,7 @@ import Button from '@mui/material/Button';
 import Allnews from './Allnews';
 
 
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkR1bW15IFVzZXIgMDAxIiwiZW1haWwiOiJkdW1teXVzZXIwMDFAZ21haWwuY29tIiwiaWF0IjoxNjcyOTcxMzMwfQ.-945018opi4W5I3ep6jgFXX__hFyrOEiW1Vq7fu49dg'
-const cred = { auth: {"token" : token } }
+
 
 
 
@@ -43,14 +42,22 @@ const signupdata3 = {
 
 
 function Home() {
-    const [loginVisible, setLoginVisible] = useState(true)
+   
     const [signupVisible, setSignupVisible] = useState(false)
     const token = useSelector((state) =>  state.data.token)
-    const dispatch = useDispatch()  
+    const dispatch = useDispatch() 
+    const flag = token ? false : true
+    const [loginVisible, setLoginVisible] = useState(flag)
 
     useEffect(()=> {
       socket.on('signupResponse', (data) => console.log(data) );
-      socket.on('loginResponse', (data) => console.log(data) );      
+      socket.on('loginResponse', (data) => console.log(data) ); 
+      
+      return () => {
+        socket.off('connect');
+        socket.off('disconnect');
+      };
+
     } , []);
   
   return (

@@ -16,6 +16,7 @@ const [subtitle, setSubtitle] = useState(subTitleText);
 const [description, setDescription] = useState(desText);
 const dispatch = useDispatch();
 const news = useSelector((state) =>  state.data.news)
+const user = useSelector(state => state.data.user)
 
 useEffect(() => {
   if(id != undefined ){
@@ -54,7 +55,7 @@ const handleSubmit = async (e) => {
   console.log("handle Submit clicked ")
   console.log(title, subtitle, description)
   if(id == undefined ) {
-    socket.emit("newnewsitem", {title, subtitle, description},  (response) => {
+    socket.emit("newnewsitem", {title, subtitle, description, uid : user.id, name : user.name},  (response) => {
       console.log(response)
       dispatch(addNews(response))
       setAddVisible(false)
@@ -79,7 +80,7 @@ return (
       <TextField  label="subtitle" variant="outlined" value={subtitle} onChange={handleSubtitle} />
       <TextField  label="description" variant="outlined" value={description} onChange={handleDescription}/>
       <div style={{textAlign : "center"}}>
-      <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>Submit News Item</Button>
+      <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>Submit</Button>
       </div>      
       </Stack>      
     </Box>	

@@ -21,9 +21,9 @@ function Detail() {
 
 
   const location = useLocation();
-  const {id, title, subtitle, description } = location.state
+  const {id, title, subtitle, description, name } = location.state
   const [ctext, setCText] = useState("dummy comment text")
-  const [comments , setComments] = useState([])
+  const [comments , setComments] = useState([null,])
 
 
 
@@ -38,6 +38,11 @@ function Detail() {
       //setNews(response)
       //dispatch(addNews(response))
     });
+
+    //commentupdate
+    socket.on('commentupdate', (data) => setComments(data) );
+
+
 
   },[]);
 
@@ -64,6 +69,7 @@ function Detail() {
       <div>{JSON.stringify(location.state)}</div>
       <Box sx={{ p: 2, width : "200px", m : "10px" }}>
        <h1>{id}</h1>
+       <p>{name}</p>
        <h1>{title}</h1>
        <h3>{subtitle}</h3>
        <p>{description}</p>       
@@ -72,7 +78,7 @@ function Detail() {
        <TextField  label="title" variant="outlined" value={ctext} onChange={(e) => {setCText(e.target.value)}} />
        <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>POST COMMENT</Button>
        <p>Displaying previous comment </p>
-       {comments.map( (e,index) => <CommentDisplay ctext={e.ctext} /> )}
+       {Array.isArray(comments) && comments.map( (e, index) => e ? <CommentDisplay key= {index} ctext={e.ctext} c_author_name = {e.name} /> : <p key={index}></p> )}
 
     </>
   )

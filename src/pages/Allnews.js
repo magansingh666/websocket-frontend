@@ -16,6 +16,7 @@ import NewsForm from "../components/NewsForm";
 function Allnews() {
   const token = useSelector((state) => state.data.token);
   const dispatch = useDispatch();
+  const user = useSelector(state => state.data.user)
   const cred = { auth: { token: token } };
   const socket = socketIO.connect("http://localhost:5000", cred);
   const [news , setNews] = useState([])
@@ -27,11 +28,15 @@ function Allnews() {
 
 
   useEffect(() => {
+    console.log("this is user .....")
+    console.log(user)
+    socket.on('updatenews', (response) => dispatch(addNews(response)) );     
     socket.emit("todaynews", "Get today news ...", (response) => {
-      console.log(response); // "got it"
-      setNews(response)
+      //console.log(response); // "got it"
+      //setNews(response)
       dispatch(addNews(response))
     });
+
   },[]);
 
   return (
@@ -46,7 +51,7 @@ function Allnews() {
       
       {addVisible && editItemId === 0 &&  <NewsForm socket={socket} setAddVisible = {setAddVisible} setEditItemId = {setEditItemId}/>}
       {!addVisible && editItemId === 0 && <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-        {news1.map((e, index) => <NewsItem key={index} id={e.id} title={e.title} subtitle = {e.subtitle} description ={e.description} setEditItemId = {setEditItemId} />)}     
+        {Array.isArray(news1) && news1.map((e, index) => <NewsItem key={index} id={e.id} title={e.title} subtitle = {e.subtitle} description ={e.description} setEditItemId = {setEditItemId} name = {e.name} author_id = {e.uid} uid = {user.id} />)}     
       </Box> }
       
     </Container>
