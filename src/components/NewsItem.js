@@ -12,22 +12,29 @@ export default function NewsItem({id, title, subtitle, description, setEditItemI
   },[])
 
   return (
-    <Box component="span" sx={{ p: 2, border: '5px dashed black', width : "200px", m : "10px" }}>
-       <h1>{id}</h1>
-       <p>{name}</p>
+    <Box component="span" sx={{ p: 2, border: '1px dashed gray', width : "200px", m : "10px" }}>
+       
        <h1>{title}</h1>
        <h3>{subtitle}</h3>
        <p>{description}</p>
+       <p>{id}</p>
+       <p>{name}</p>
+
+       <Button variant="outlined"  onClick={() => {
+        navigate("/detail", {state:{ id, title, subtitle, description, name }});
+
+       }}>View Detail</Button>
+
+      <p></p>
+
+
        {author_id === uid ? <Button variant="outlined" onClick={() => {
         setEditItemId(id)
        }}>Edit</Button> : null  }
        
 
 
-       <Button variant="outlined"  onClick={() => {
-        navigate("/detail", {state:{ id, title, subtitle, description, name }});
-
-       }}>View Detail</Button>
+       
     </Box>
   );
 }

@@ -19,7 +19,7 @@ function Allnews() {
   const user = useSelector(state => state.data.user)
   const cred = { auth: { token: token } };
   const socket = socketIO.connect("http://localhost:5000", cred);
-  const [news , setNews] = useState([])
+  
   const [addVisible, setAddVisible] = useState(false)
   const [editItemId, setEditItemId] = useState(0)
   const news1 = useSelector((state) =>  {console.log(state.data.news);console.log("this is news data ") ;
@@ -28,21 +28,20 @@ function Allnews() {
 
 
   useEffect(() => {
-    console.log("this is user .....")
-    console.log(user)
+   
     socket.on('updatenews', (response) => dispatch(addNews(response)) );     
     socket.emit("todaynews", "Get today news ...", (response) => {
-      //console.log(response); // "got it"
-      //setNews(response)
+      
       dispatch(addNews(response))
     });
 
   },[]);
 
   return (
-    <Container maxWidth="md" sx={{ backgroundColor: "gray" }}>
+    <Container maxWidth="md" sx={{ backgroundColor: "white", "border" : "1px solid black", mt : 1 }}>
+      <p style={{"textAlign": "right"}}>USER ID : {user.id}</p>
       <h1>Today's News </h1>
-      <h1>{editItemId}</h1>
+      
       <Button variant="contained" onClick={() => {
         setAddVisible(true)
        }}>ADD NEW</Button>

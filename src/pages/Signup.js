@@ -19,7 +19,7 @@ const [error, setError] = useState(false);
 
 useEffect(()=> {
   socket.on('signupResponse', (data) => {
-    console.log(data)
+    
     if(data.message === "success"){
       alert("sign up successful! please login now")
       setSignupVisible(false)
@@ -51,9 +51,7 @@ const handlePassword = (e) => {
 
 // Handling the form submission
 const handleSubmit = (e) => {
-	e.preventDefault();	
-  console.log("handle Submit clicked ")
-  console.log(name, email, password)
+	e.preventDefault();	  
   socket.emit("signup", {name, email, password})
 };
 return (

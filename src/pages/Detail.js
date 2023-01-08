@@ -7,14 +7,12 @@ import CommentDisplay from '../components/CommentDisplay';
 import socketIO from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { addToken, deleteToken, addNews } from "../redux/dataSlice";
-
-
-
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
 
 function Detail() {
 
     const token = useSelector((state) => state.data.token);
-    const dispatch = useDispatch();
     const user = useSelector(state => state.data.user)
     const cred = { auth: { token: token } };
     const socket = socketIO.connect("http://localhost:5000", cred);
@@ -22,65 +20,58 @@ function Detail() {
 
   const location = useLocation();
   const {id, title, subtitle, description, name } = location.state
-  const [ctext, setCText] = useState("dummy comment text")
+  const [ctext, setCText] = useState("")
   const [comments , setComments] = useState([null,])
 
 
-
-
   useEffect(() => {
-    //console.log("user stored in store is ....")
-   // console.log(user)
-
-    socket.emit("getcomments", {news_id : id}, (response) => {
-      //console.log(response); // "got it"
-      setComments(response)
-      //setNews(response)
-      //dispatch(addNews(response))
-    });
-
-    //commentupdate
+    socket.emit("getcomments", {news_id : id}, (response) => {      
+      setComments(response)       
+    });    
     socket.on('commentupdate', (data) => setComments(data) );
-
-
 
   },[]);
 
 
 
   //post new comment here ....
-  const handleSubmit = () => {
-    console.log("submitting comment ........")
+  const handleSubmit = () => {  
 
-    socket.emit("addnewcomment", {ctext, uid : user.id, name : user.name, news_id : id}, (response) => {
-        console.log(response); //
+    socket.emit("addnewcomment", {ctext, uid : user.id, name : user.name, news_id : id}, (response) => {    
         setComments(response)
-        
-        //setNews(response)
-        //dispatch(addNews(response))
+        setCText("")      
+
       });
 
   }
 
-
   return (
-    <>
-      <h1>This is Detial Page</h1>
-      <div>{JSON.stringify(location.state)}</div>
-      <Box sx={{ p: 2, width : "200px", m : "10px" }}>
-       <h1>{id}</h1>
-       <p>{name}</p>
-       <h1>{title}</h1>
+    <Container maxWidth="sm">
+      <p style={{"textAlign": "right"}}>USER ID : {user.id}</p>
+      <Box sx={{ "border" : "1px solid black", mt : 1 , p : 2}}>       
+       <h1 style={{"textAlign" : "center"}}>{title}</h1>
+       <p style={{"textAlign" : "right"}}>written by {name}</p>
        <h3>{subtitle}</h3>
+       <p>ID - {id}</p>
+       
        <p>{description}</p>       
     </Box>
-       <p>Add your Comment here ....</p>
-       <TextField  label="title" variant="outlined" value={ctext} onChange={(e) => {setCText(e.target.value)}} />
-       <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>POST COMMENT</Button>
-       <p>Displaying previous comment </p>
+       <h3>Add your Comment here ....</h3>
+       <Stack spacing={2}>
+       <TextField  label="comment text" variant="outlined" value={ctext} onChange={(e) => {setCText(e.target.value)}} />
+       <div style={{textAlign : "right"  }}>
+       <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>POST</Button>
+       </div>
+       
+
+        
+      </Stack>
+
+       
+       <h3>Displaying previous comment </h3>
        {Array.isArray(comments) && comments.map( (e, index) => e ? <CommentDisplay key= {index} ctext={e.ctext} c_author_name = {e.name} /> : <p key={index}></p> )}
 
-    </>
+    </Container>
   )
 }
 

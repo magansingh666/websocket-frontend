@@ -20,9 +20,8 @@ const user = useSelector(state => state.data.user)
 
 useEffect(() => {
   if(id != undefined ){
-   const item =  news.filter( e => e.id === id).pop()
-   console.log("tem array is ")
-   console.log(item)
+   const item =  news.filter( e => e.id === id).pop()   
+   
    setTitle(item.title)
    setSubtitle(item.subtitle)
    setDescription(item.description)

@@ -23,8 +23,7 @@ const [error, setError] = useState(false);
 
 
 useEffect(()=> {
-  socket.on('loginResponse', (data) => {
-    console.log(data)
+  socket.on('loginResponse', (data) => {    
     if(data.message === "success"){
       dispatch(addToken(data.token))
       const {id, name, email} = data
@@ -53,8 +52,8 @@ const handlePassword = (e) => {
 const handleSubmit = (e) => {
 	e.preventDefault();	
 
-  console.log("handle Submit clicked ")
-  console.log(email, password)
+  
+
   socket.emit("login", { email, password})
 };
 return (
@@ -66,8 +65,7 @@ return (
       <TextField  label="password" variant="outlined" type={"password"} value={password} onChange={handlePassword}/>
       <div style={{textAlign : "center"}}>
       <Button sx={{maxWidth: "200px", }} variant="outlined" onClick={handleSubmit}>LOG IN</Button>
-      <h1>{token}</h1>
-      <p>{JSON.stringify(user)}</p>
+    
       </div>      
       </Stack>      
     </Box>	
