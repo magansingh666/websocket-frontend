@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "pcs-study"
+  },
+  "targets": {
+    "pcs-study": {
+      "hosting": {
+        "post": [
+          "post1"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
